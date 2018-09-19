@@ -11,7 +11,8 @@ function export($input) {
         );
         array_push($data, $tmp);
     }
-    return json_encode($data);
+
+    return $data;
 }
 
 function envar($name, $default) {

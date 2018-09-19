@@ -2,6 +2,8 @@
 require_once __DIR__ . '/vendor/autoload.php';
 require_once __DIR__ . '/functions.php';
 
+use Symfony\Component\HttpFoundation\JsonResponse;
+
 $app = new Silex\Application();
 $app['debug'] = true;
 
@@ -21,7 +23,7 @@ $app->get('/ws/healthz/', function () {
 });
 
 $app->get('/ws/info/', function () {
-    return json_encode(array(
+    return new JsonResponse(array(
         'id' => 'nationalparks-py',
         'displayName' => 'National Parks (PHP)',
         'type' => 'cluster',
@@ -50,7 +52,7 @@ $app->get('/ws/data/load/', function () use ($database) {
 });
 
 $app->get('/ws/data/all/', function () use ($database) {
-    return export($database->nationalparks->find());
+    return new JsonResponse(export($database->nationalparks->find()));
 });
 
 $app->get('/ws/data/within/', function (Symfony\Component\HttpFoundation\Request $request) use ($database) {
@@ -60,7 +62,7 @@ $app->get('/ws/data/within/', function (Symfony\Component\HttpFoundation\Request
     );
 
     $query = array('Location' => array('$within' => array('$box' => $box)));
-    return export($database->nationalparks->find($query));
+    return new JsonResponse(export($database->nationalparks->find($query)));
 });
 
 $app->get('/', function () {
